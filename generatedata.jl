@@ -66,9 +66,8 @@ function generate_recurrence_relation(α_matrix)
     return dot(recurrence_matrix, α_matrix)
 end
 
-α_legendre = [l*(l+1)  0   0;
-              0       -2   0;
-              1        0  -1]
+α_legendre = [l*(l+1)  0;
+              0       -2;]
 
 recurrence = generate_recurrence_relation(α_legendre)
 println("Legendre recurrence relation: ", recurrence, " = 0")
