@@ -1,0 +1,57 @@
+Purpose: A short Julia script that allows the user to provide any n by n 
+ matrix and outputs a recurrence relation. Then the recurrence relation will output the coefficients associated with the solution jto the ODE
+
+Rules:
+$\alpha_{k,i}$ represents the coefficients associated with the $k$th derivative and $i$th term in the polynomial.
+We can represent $\alpha_{k,i}$ as follows:
+
+$\alpha_{k,i} \in \mathbb{R}^{k \times i}$
+
+$$\alpha_{k,i} = \begin{pmatrix}
+\alpha_{0,0} & \alpha_{0,1} & \alpha_{0,2} & \cdots & \alpha_{0,i} \\
+\alpha_{1,0} & \alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,i} \\
+\alpha_{2,0} & \alpha_{2,1} & \alpha_{2,2} & \cdots & \alpha_{2,i} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+\alpha_{k,0} & \alpha_{k,1} & \alpha_{k,2} & \cdots & \alpha_{k,i}
+\end{pmatrix}$$
+
+Now we can generate a random assortment of matrices that represent ODEs for which we wish to find recurrence relations. Let us use this matrix to solve the following Legendre ODE: $(1 - x^2)y'' - 2xy' + l(l+1)y = 0$
+Example
+$$\alpha = \begin{pmatrix}
+l(l+1) & 0 & 0 \\
+0 & -2 & 0 \\
+1 & 0 & -1
+\end{pmatrix} \quad \Rightarrow \quad (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n = 0$$
+
+
+Now, these recurrence relations can be computed with a dot product. For the above example, you do a dot product.
+
+$$\begin{pmatrix}
+a_n & a_{n-1} & a_{n-2} \\
+(n+1)a_{n+1} & na_n & (n-1)a_{n-1} \\
+(n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n
+\end{pmatrix} \cdot \begin{pmatrix}
+l(l+1) & 0 & 0 \\
+0 & -2 & 0 \\
+1 & 0 & -1
+\end{pmatrix} = (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n$$
+
+Here is the general matrix that you need to consider for the julia script we are making.
+
+$$\begin{pmatrix}
+a_n & a_{n-1} & a_{n-2} & a_{n-3} & a_{n-4} & \cdots \\
+(n+1)a_{n+1} & na_n & (n-1)a_{n-1} & (n-2)a_{n-2} & (n-3)a_{n-3} & \cdots \\
+(n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n & (n-1)(n-2)a_{n-1} & (n-2)(n-3)a_{n-2} & \cdots \\
+(n+3)(n+2)(n+1)a_{n+3} & (n+2)(n+1)na_{n+2} & (n+1)n(n-1)a_{n+1} & n(n-1)(n-2)a_n & (n-1)(n-2)(n-3)a_{n-1} & \cdots \\
+(n+4)(n+3)(n+2)(n+1)a_{n+4} & (n+3)(n+2)(n+1)na_{n+3} & (n+2)(n+1)n(n-1)a_{n+2} & (n+1)n(n-1)(n-2)a_{n+1} & n(n-1)(n-2)(n-3)a_n & \cdots \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \ddots
+\end{pmatrix}$$
+
+
+This matrix follows the following pattern:
+
+$$
+\sum_{i=0}^{\infty} \alpha_{k,i} \prod_{j=1}^{k} (n+j-i)a_{n+k-i}
+$$
+
+
