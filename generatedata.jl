@@ -86,8 +86,8 @@ end
 
 
 function generate_random_alpha_matrix(ode_order, poly_degree)
-  rows = ode_order
-  cols = poly_degree
+  rows = ode_order + 1
+  cols = poly_degree + 1
   α_matrix = Matrix{Any}(nothing, rows, cols)
   for i in 1:rows
     for j in 1:cols
