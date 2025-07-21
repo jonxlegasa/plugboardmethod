@@ -1,57 +1,124 @@
-Purpose: A short Julia script that allows the user to provide any n by n 
- matrix and outputs a recurrence relation. Then the recurrence relation will output the coefficients associated with the solution jto the ODE
-
-Rules:
-$\alpha_{k,i}$ represents the coefficients associated with the $k$th derivative and $i$th term in the polynomial.
-We can represent $\alpha_{k,i}$ as follows:
-
-$\alpha_{k,i} \in \mathbb{R}^{k \times i}$
-
-$$\alpha_{k,i} = \begin{pmatrix}
-\alpha_{0,0} & \alpha_{0,1} & \alpha_{0,2} & \cdots & \alpha_{0,i} \\
-\alpha_{1,0} & \alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,i} \\
-\alpha_{2,0} & \alpha_{2,1} & \alpha_{2,2} & \cdots & \alpha_{2,i} \\
-\vdots & \vdots & \vdots & \ddots & \vdots \\
-\alpha_{k,0} & \alpha_{k,1} & \alpha_{k,2} & \cdots & \alpha_{k,i}
-\end{pmatrix}$$
-
-Now we can generate a random assortment of matrices that represent ODEs for which we wish to find recurrence relations. Let us use this matrix to solve the following Legendre ODE: $(1 - x^2)y'' - 2xy' + l(l+1)y = 0$
-Example
-$$\alpha = \begin{pmatrix}
-l(l+1) & 0 & 0 \\
-0 & -2 & 0 \\
-1 & 0 & -1
-\end{pmatrix} \quad \Rightarrow \quad (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n = 0$$
+Context:
 
 
-Now, these recurrence relations can be computed with a dot product. For the above example, you do a dot product.
+  Purpose: A short Julia script that allows the user to provide any n by n 
+  matrix and outputs a recurrence relation. Then the recurrence relation will output the coefficients associated with the solution jto the ODE
 
-$$\begin{pmatrix}
-a_n & a_{n-1} & a_{n-2} \\
-(n+1)a_{n+1} & na_n & (n-1)a_{n-1} \\
-(n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n
-\end{pmatrix} \cdot \begin{pmatrix}
-l(l+1) & 0 & 0 \\
-0 & -2 & 0 \\
-1 & 0 & -1
-\end{pmatrix} = (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n$$
+  Rules:
+  $\alpha_{k,i}$ represents the coefficients associated with the $k$th derivative and $i$th term in the polynomial.
+  We can represent $\alpha_{k,i}$ as follows:
 
-Here is the general matrix that you need to consider for the julia script we are making.
+  $\alpha_{k,i} \in \mathbb{R}^{k \times i}$
 
-$$\begin{pmatrix}
-a_n & a_{n-1} & a_{n-2} & a_{n-3} & a_{n-4} & \cdots \\
-(n+1)a_{n+1} & na_n & (n-1)a_{n-1} & (n-2)a_{n-2} & (n-3)a_{n-3} & \cdots \\
-(n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n & (n-1)(n-2)a_{n-1} & (n-2)(n-3)a_{n-2} & \cdots \\
-(n+3)(n+2)(n+1)a_{n+3} & (n+2)(n+1)na_{n+2} & (n+1)n(n-1)a_{n+1} & n(n-1)(n-2)a_n & (n-1)(n-2)(n-3)a_{n-1} & \cdots \\
-(n+4)(n+3)(n+2)(n+1)a_{n+4} & (n+3)(n+2)(n+1)na_{n+3} & (n+2)(n+1)n(n-1)a_{n+2} & (n+1)n(n-1)(n-2)a_{n+1} & n(n-1)(n-2)(n-3)a_n & \cdots \\
-\vdots & \vdots & \vdots & \vdots & \vdots & \ddots
-\end{pmatrix}$$
+  $$\alpha_{k,i} = \begin{pmatrix}
+  \alpha_{0,0} & \alpha_{0,1} & \alpha_{0,2} & \cdots & \alpha_{0,i} \\
+  \alpha_{1,0} & \alpha_{1,1} & \alpha_{1,2} & \cdots & \alpha_{1,i} \\
+  \alpha_{2,0} & \alpha_{2,1} & \alpha_{2,2} & \cdots & \alpha_{2,i} \\
+  \vdots & \vdots & \vdots & \ddots & \vdots \\
+  \alpha_{k,0} & \alpha_{k,1} & \alpha_{k,2} & \cdots & \alpha_{k,i}
+  \end{pmatrix}$$
+
+  Now we can generate a random assortment of matrices that represent ODEs for which we wish to find recurrence relations. Let us use this matrix to solve the following Legendre ODE: $(1 - x^2)y'' - 2xy' + l(l+1)y = 0$
+  Example
+  $$\alpha = \begin{pmatrix}
+  l(l+1) & 0 & 0 \\
+  0 & -2 & 0 \\
+  1 & 0 & -1
+  \end{pmatrix} \quad \Rightarrow \quad (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n = 0$$
 
 
-This matrix follows the following pattern:
+  Now, these recurrence relations can be computed with a dot product. For the above example, you do a dot product.
 
-$$
-\sum_{i=0}^{\infty} \alpha_{k,i} \prod_{j=1}^{k} (n+j-i)a_{n+k-i}
-$$
+  $$\begin{pmatrix}
+  a_n & a_{n-1} & a_{n-2} \\
+  (n+1)a_{n+1} & na_n & (n-1)a_{n-1} \\
+  (n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n
+  \end{pmatrix} \cdot \begin{pmatrix}
+  l(l+1) & 0 & 0 \\
+  0 & -2 & 0 \\
+  1 & 0 & -1
+  \end{pmatrix} = (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1) a_n$$
 
+  Here is the general matrix that you need to consider for the julia script we are making.
+
+  $$\begin{pmatrix}
+  a_n & a_{n-1} & a_{n-2} & a_{n-3} & a_{n-4} & \cdots \\
+  (n+1)a_{n+1} & na_n & (n-1)a_{n-1} & (n-2)a_{n-2} & (n-3)a_{n-3} & \cdots \\
+  (n+2)(n+1)a_{n+2} & (n+1)na_{n+1} & n(n-1)a_n & (n-1)(n-2)a_{n-1} & (n-2)(n-3)a_{n-2} & \cdots \\
+  (n+3)(n+2)(n+1)a_{n+3} & (n+2)(n+1)na_{n+2} & (n+1)n(n-1)a_{n+1} & n(n-1)(n-2)a_n & (n-1)(n-2)(n-3)a_{n-1} & \cdots \\
+  (n+4)(n+3)(n+2)(n+1)a_{n+4} & (n+3)(n+2)(n+1)na_{n+3} & (n+2)(n+1)n(n-1)a_{n+2} & (n+1)n(n-1)(n-2)a_{n+1} & n(n-1)(n-2)(n-3)a_n & \cdots \\
+  \vdots & \vdots & \vdots & \vdots & \vdots & \ddots
+  \end{pmatrix}$$
+
+
+  This matrix follows the following pattern:
+
+  $$
+  \sum_{i=0}^{\infty} \alpha_{k,i} \prod_{j=1}^{k} (n+j-i)a_{n+k-i}
+  $$
+
+## Step-by-Step Plan
+
+### 1. **Problem Analysis (Updated)**
+- We need to construct the **matrix of recurrence coefficient terms** (the one with a_n, (n+1)a_{n+1}, etc.)
+- Then use LinearAlgebra's dot product between this matrix and the α coefficient matrix
+- The result will be the complete recurrence relation
+
+### 2. **Matrix Construction Understanding**
+- The left matrix contains symbolic terms like:
+  - Row 0: [a_n, a_{n-1}, a_{n-2}, ...]
+  - Row 1: [(n+1)a_{n+1}, na_n, (n-1)a_{n-1}, ...]
+  - Row 2: [(n+2)(n+1)a_{n+2}, (n+1)na_{n+1}, n(n-1)a_n, ...]
+- Each element follows: ∏(n+j-i) * a_{n+k-i} for j=1 to k
+
+### 3. **Implementation Plan**
+
+**Step 3a: Setup and Imports**
+- Import LinearAlgebra and Symbolics packages
+- Define symbolic variables: n, l (for parameters), and symbolic coefficients a
+
+**Step 3b: Helper Functions**
+- `factorial_product(n, k, i)`: Compute ∏(n+j-i) for j=1 to k
+- `coefficient_term(n, k, i)`: Generate the symbolic term a_{n+k-i}
+- `matrix_element(n, k, i)`: Combine factorial_product and coefficient_term
+
+**Step 3c: Matrix Construction Function**
+```julia
+function construct_recurrence_matrix(n_symbolic, matrix_size)
+    # Build the matrix of recurrence coefficient terms
+    # Each element [k,i] = ∏(n+j-i) * a_{n+k-i}
+end
+```
+
+**Step 3d: Main Function**
+```julia
+function generate_recurrence_relation(α_matrix)
+    # 1. Get matrix dimensions
+    # 2. Construct the recurrence coefficient matrix
+    # 3. Use LinearAlgebra.dot() to compute final relation
+    # 4. Return the symbolic recurrence relation
+end
+```
+
+**Step 3e: Dot Product Implementation**
+- Use `LinearAlgebra.dot(recurrence_matrix, α_matrix)` 
+- This will automatically sum all the cross-products: Σᵢⱼ recurrence_matrix[i,j] * α_matrix[i,j]
+
+**Step 3f: Symbolic Coefficient Handling**
+- Define symbolic coefficients a_n with appropriate indexing
+- Ensure Symbolics can handle the shifting indices (a_{n+k-i})
+
+**Step 3g: Test Implementation**
+- Create the Legendre example α matrix:
+```julia
+α_legendre = [l*(l+1)  0   0;
+              0       -2   0;
+              1        0  -1]
+```
+- Verify output matches: (n+2)(n+1)a_{n+2} - n(n-1)a_n - 2na_n + l(l+1)a_n = 0
+
+### 4. **Key Technical Challenges to Address**
+- Handling symbolic array indexing with Symbolics.jl
+- Ensuring the factorial products are computed correctly for each matrix position
+- Managing the shifting indices in the coefficient terms
 
