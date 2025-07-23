@@ -2,6 +2,10 @@ using LinearAlgebra
 using TaylorSeries
 using Random
 
+
+# LETS DO SOME DEBUGGINGGGGGG
+# Get get_user_inputs is working properly
+# The user can define the order of the ODE and the degree of the polynomial
 function get_user_inputs()
   println("The Plugboard: Randomized ODE Generator")
   println("=================================")
@@ -17,6 +21,9 @@ function get_user_inputs()
   return ode_order, poly_degree, dataset_size
 end
 
+# generate_random_alpha_matrix generates a random alpha_matrix
+# generate_random_alpha_matrix works properly
+# based on the the order of the ODE and the polynomial degree
 function generate_random_alpha_matrix(ode_order, poly_degree)
   rows = ode_order + 1
   cols = poly_degree + 1
@@ -29,6 +36,8 @@ function generate_random_alpha_matrix(ode_order, poly_degree)
   return α_matrix
 end
 
+# factorial_product_numeric works properly
+# This function returns the following infinite product (n+j-i)a_{n+k-i}
 function factorial_product_numeric(n_val, k, i)
   if k == 0
     return 1.0
@@ -65,7 +74,7 @@ function generate_recurrence_coefficients(α_matrix)
         end
       end
     end
-
+    println("Coeffs output: ", coeffs)
     return coeffs
   end
 end
