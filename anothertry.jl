@@ -116,7 +116,6 @@ function solve_ode_series(α_matrix, initial_conditions, num_terms)
   return Taylor1(series_coeffs)
 end
 
-
 function generate_random_ode_dataset()
   ode_order, poly_degree, dataset_size = get_user_inputs()
   println("\nGenerating random α matrices for:")
