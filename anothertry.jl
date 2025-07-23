@@ -74,27 +74,48 @@ function solve_ode_series(α_matrix, initial_conditions, num_terms)
   coeff_func = generate_recurrence_coefficients(α_matrix)
   series_coeffs = Float64.(initial_conditions)
 
-  println(series_coeffs)
+  println("Starting with: ", series_coeffs)
+
   for n_val in length(initial_conditions):(num_terms-1)
+    println("\n--- Computing term for n_val = $n_val ---")
     coeffs = coeff_func(n_val)
+    println("Coefficients: ", coeffs)
+
     # Find highest offset (what we're solving for)
     max_offset = maximum(keys(coeffs))
+    println("Max offset: ", max_offset)
+    println("Solving for a_{$(n_val + max_offset)}")
+
     # Calculate sum of known terms
     total = 0.0
+    println("Known terms calculation:")
     for (offset, coeff) in coeffs
       if offset != max_offset
         index = n_val + offset
+        println("  offset=$offset, index=$index, length(series_coeffs)=$(length(series_coeffs))")
         if index >= 0 && index < length(series_coeffs)
-          total += coeff * series_coeffs[index+1]
+          term_value = coeff * series_coeffs[index+1]
+          println("    Adding: $coeff * series_coeffs[$(index+1)] = $coeff * $(series_coeffs[index+1]) = $term_value")
+          total += term_value
+        else
+          println("    Skipping: index $index out of bounds")
         end
       end
     end
+
+    println("Total of known terms: ", total)
+    println("Coefficient of highest term: ", coeffs[max_offset])
+
     # Solve for next coefficient
     next_coeff = -total / coeffs[max_offset]
+    println("Next coefficient: ", next_coeff)
     push!(series_coeffs, next_coeff)
+    println("Series so far: ", series_coeffs)
   end
+
   return Taylor1(series_coeffs)
 end
+
 
 function generate_random_ode_dataset()
   ode_order, poly_degree, dataset_size = get_user_inputs()
@@ -108,20 +129,19 @@ function generate_random_ode_dataset()
     println("α matrix:")
     display(α_matrix)
     # Generate random initial conditions based on ODE order
-    # Generate initial conditions: y(0), y'(0), y''(0), etc.
     initial_conditions = Float64[]
-    for i in 0:(ode_order-1)
+    for i in 0:(ode_order)
       if i == 0
         push!(initial_conditions, rand(1:5))  # y(0) = a_0
         println("y(0) = ", initial_conditions[end])
-      else
+      elseif i == 1
         push!(initial_conditions, rand(1:5))  # y'(0) = a_1
         println("y'(0) = ", initial_conditions[end])
       end
     end
 
     try
-      taylor_series = solve_ode_series(α_matrix, initial_conditions, 40)
+      taylor_series = solve_ode_series(α_matrix, initial_conditions, 12)
       println("Taylor series: ", taylor_series)
     catch e
       println("Failed to solve this ODE (possibly singular): ", e)
