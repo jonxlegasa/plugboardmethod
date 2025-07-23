@@ -49,7 +49,7 @@ function solve_ode_series_closed_form(α_matrix, initial_conditions, num_terms)
   series_coeffs = Float64.(initial_conditions)
 
   println("Starting with initial conditions: ", series_coeffs)
-  println("ODE order (m): ", m)
+  println("ODE order: ", m)
 
   # Compute coefficients using closed form
   for n in 0:(num_terms-length(initial_conditions)-1)

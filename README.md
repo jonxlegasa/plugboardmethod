@@ -7,6 +7,10 @@ cd plugboardmethod
 # 2. download the dependencies once
 julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
-# 3. run the script and put the polynomial degree.
-julia generatedata.jl
+# 3. run the script and put the ODE order and degree of the polynomial
+julia main.jl
 ```
+
+
+# Increase number of terms for Taylor Series and coefficients
+Go to main.jl and adjust the last parameter in 'solve_ode_series_closed_form'
