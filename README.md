@@ -1,3 +1,10 @@
+# plugboardmethod
+
+
+| Folder | What’s inside |
+|--------|---------------|
+| `data/` | output goes here (`.json`, `.txt`) |
+
 # Quick start (fresh machine)
 ```bash
 # 1. grab the code
@@ -11,6 +18,10 @@ julia --project=. -e 'using Pkg; Pkg.instantiate()'
 julia main.jl
 ```
 
+# Generate new datasets
+If you want a new dataset, just delete the arrays in "series_coefficients" in ./data/dataset.json
+It should look like this
 
-# Increase number of terms for Taylor Series and coefficients
-Go to main.jl and adjust the last parameter in 'solve_ode_series_closed_form'
+```json
+{"series coefficient":[]}
+```

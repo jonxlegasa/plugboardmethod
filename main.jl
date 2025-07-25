@@ -1,6 +1,7 @@
 using LinearAlgebra
 using TaylorSeries
 using Random
+using JSON
 
 # Get user inputs - unchanged
 function get_user_inputs()
@@ -117,9 +118,17 @@ function generate_random_ode_dataset()
     end
 
     try
+      # output taylor series and its coefficients
       taylor_series, series_coeffs = solve_ode_series_closed_form(α_matrix, initial_conditions, 10)
       println("Truncated Taylor series: ", taylor_series)
       println("Truncated series coefficients: ", series_coeffs)
+      # Read existing data
+      existing_data = JSON.parsefile("./data/dataset.json")
+      # Append the current value
+      push!(existing_data["series coefficient"], series_coeffs)
+      isdir("data") || mkpath("data") # ensure a data folder exists
+      json_string = JSON.json(existing_data)
+      write("./data/dataset.json", json_string)
     catch e
       println("Failed to solve this ODE: ", e)
     end
